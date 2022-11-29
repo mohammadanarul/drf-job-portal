@@ -1,5 +1,6 @@
 from django.db import models
 from django_countries.fields import CountryField
+from taggit.managers import TaggableManager
 
 from apps.common.models import BaseModel
 from apps.users.models import Employee, Recruiter

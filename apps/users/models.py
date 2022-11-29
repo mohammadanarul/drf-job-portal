@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -6,7 +6,7 @@ from apps.users.choices import UserRoll
 from apps.users.managers import UserManager
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
 
     default_type = UserRoll.EMPLOYEE
     full_name = models.CharField(max_length=255)
@@ -19,6 +19,8 @@ class User(AbstractBaseUser):
     roll = models.CharField(
         choices=UserRoll.choices, default=default_type, max_length=9
     )
+    last_login = models.DateTimeField(verbose_name="last login", auto_now=True)
+    date_joined = models.DateTimeField(verbose_name="date join", auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -30,7 +32,7 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = ["email"]
 
     def __str__(self):
-        return self.phone_number
+        return f"{self.phone_number}"
 
     def save(self, *args, **kwargs):
         if not self.id:
