@@ -42,10 +42,8 @@ class UserAdmin(UserAdmin):
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
     list_display = (
-        "password",
-        "last_login",
-        "full_name",
         "phone_number",
+        "full_name",
         "email",
         "roll",
         "is_active",
@@ -65,10 +63,8 @@ class EmployeeAdmin(admin.ModelAdmin):
 @admin.register(Recruiter)
 class RecruiterAdmin(admin.ModelAdmin):
     list_display = (
-        "password",
-        "last_login",
-        "full_name",
         "phone_number",
+        "full_name",
         "email",
         "roll",
         "is_active",

@@ -1,4 +1,5 @@
 from django.db import models
+from django_countries.fields import CountryField
 from taggit.managers import TaggableManager
 
 from apps.common.models import BaseModel
@@ -12,6 +13,7 @@ class Job(BaseModel):
     skils = TaggableManager()
     address = models.CharField(max_length=150)
     sellery = models.IntegerField()
+    country = CountryField(blank_label="(select country)")
     expiry_date = models.DateField()
     description = models.TextField()
     employees = models.ManyToManyField(Employee, related_name="job_applies")

@@ -3,21 +3,21 @@ from django.utils.crypto import get_random_string
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from apps.users.models import Recruiter
+from apps.users.models import Employee, Recruiter, User
 
 
-class RecruiterSerializer(serializers.ModelSerializer):
+class EmployeeSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
-        required=True, validators=[UniqueValidator(queryset=Recruiter.objects.all())]
+        required=True, validators=[UniqueValidator(queryset=Employee.objects.all())]
     )
     phone_number = serializers.CharField(
-        required=True, validators=[UniqueValidator(queryset=Recruiter.objects.all())]
+        required=True, validators=[UniqueValidator(queryset=Employee.objects.all())]
     )
 
     class Meta:
-        model = Recruiter
+        model = Employee
         fields = (
-            "id",
+            "pk",
             "full_name",
             "phone_number",
             "email",
@@ -25,7 +25,7 @@ class RecruiterSerializer(serializers.ModelSerializer):
         )
 
 
-class RecruiterRegisterSerializer(RecruiterSerializer):
+class EmployeeRegisterSerializer(EmployeeSerializer):
     password1 = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
     )
@@ -33,8 +33,8 @@ class RecruiterRegisterSerializer(RecruiterSerializer):
         write_only=True, required=True, validators=[validate_password]
     )
 
-    class Meta(RecruiterSerializer.Meta):
-        fields = RecruiterSerializer.Meta.fields + ("password1", "password2")
+    class Meta(EmployeeSerializer.Meta):
+        fields = EmployeeSerializer.Meta.fields + ("password1", "password2")
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
@@ -44,7 +44,7 @@ class RecruiterRegisterSerializer(RecruiterSerializer):
         if password1 != password2:
             raise serializers.ValidationError({"password": "Password didn't match."})
 
-        user = Recruiter(
+        user = Employee(
             full_name=validated_data["full_name"],
             phone_number=validated_data["phone_number"],
             email=validated_data["email"],

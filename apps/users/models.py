@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.core.validators import RegexValidator
 from django.db import models
-from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.users.choices import UserRoll
 from apps.users.managers import UserManager
@@ -9,8 +9,14 @@ from apps.users.managers import UserManager
 class User(AbstractBaseUser, PermissionsMixin):
 
     default_type = UserRoll.EMPLOYEE
+    phone_regex = RegexValidator(
+        regex=r"^(((?:\+88)?(?:\d{11}))|((?:01)?(?:\d{11})))$",
+        message="Phone number must be entred in the format: +8801555555550, Up to 11 digits allowed.",
+    )
     full_name = models.CharField(max_length=255)
-    phone_number = PhoneNumberField(blank=True, unique=True)
+    phone_number = models.CharField(
+        validators=[phone_regex], max_length=14, unique=True
+    )
     email = models.EmailField(
         verbose_name="email address",
         max_length=255,
@@ -19,6 +25,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     roll = models.CharField(
         choices=UserRoll.choices, default=default_type, max_length=9
     )
+    otp = models.CharField(max_length=6, blank=True)
     last_login = models.DateTimeField(verbose_name="last login", auto_now=True)
     date_joined = models.DateTimeField(verbose_name="date join", auto_now_add=True)
     is_active = models.BooleanField(default=True)
@@ -40,12 +47,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         return super().save(*args, **kwargs)
 
     def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
+        """Does the user have a specific permission?"""
         # Simplest possible answer: Yes, always
         return True
 
     def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
+        """Does the user have permissions to view the app `app_label`?"""
         # Simplest possible answer: Yes, always
         return True
 
