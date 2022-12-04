@@ -12,7 +12,7 @@ class Job(BaseModel):
     vacancy = models.IntegerField()
     skils = TaggableManager()
     address = models.CharField(max_length=150)
-    sellery = models.IntegerField()
+    sellery = models.CharField(max_length=30)
     country = CountryField(blank_label="(select country)")
     expiry_date = models.DateField()
     description = models.TextField()
