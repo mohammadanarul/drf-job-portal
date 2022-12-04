@@ -16,6 +16,12 @@ class JobSerializer(serializers.ModelSerializer):
             "country",
             "expiry_date",
             "description",
+        )
+
+
+class JobDetailSerializer(JobSerializer):
+    class Meta(JobSerializer.Meta):
+        fields = JobSerializer.Meta.fields + (
             "employees",
             "expiry",
         )
