@@ -34,7 +34,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-### `celery` use for send mail
+### `celery` command to below
 
 ```base
 celery -A core worker --loglevel=INFO --pool=solo
