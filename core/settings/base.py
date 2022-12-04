@@ -2,20 +2,15 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+import environ
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+env = environ.Env(DEBUG=(bool, False), ALLOWED_HOSTS=list)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-ks^hmaa714p4*fw^n6=$**cou+19%jt^(cr86s@k_bm-k#&t6f"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ["*"]
+env_path = os.path.join(BASE_DIR, ".env")
+environ.Env.read_env(env_path)
 
 AUTH_USER_MODEL = "users.User"
 
@@ -74,17 +69,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "core.wsgi.application"
-
-
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
 
 
 # Password validation
@@ -149,15 +133,6 @@ CACHES = {
     }
 }
 
-# email configurations
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = "mdanarul7075@gmail.com"
-EMAIL_HOST_PASSWORD = "ziijsqgrpfbnpmtc"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-DEFAULT_FROM_EMAIL = "mdanarul7075@gmail.com"
-
 
 # jwt config
 
@@ -174,7 +149,7 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": True,
     "ALGORITHM": "HS256",
-    "SIGNING_KEY": SECRET_KEY,
+    "SIGNING_KEY": env("SECRET_KEY"),
     "VERIFYING_KEY": None,
     "AUDIENCE": None,
     "ISSUER": None,
