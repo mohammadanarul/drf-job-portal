@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.password_validation import validate_password
 from django.utils.crypto import get_random_string
 from rest_framework import serializers
